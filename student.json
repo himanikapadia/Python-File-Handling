@@ -1,0 +1,14 @@
+[
+    {
+        "Name": "Vishva",
+        "Rollno": 23,
+        "Course": "BBA",
+        "CGPA": 9.07
+    },
+    {
+        "Name": "Himani",
+        "Rollno": 60,
+        "Course": "Bsc.IT",
+        "CGPA": 7.07
+    }
+]
