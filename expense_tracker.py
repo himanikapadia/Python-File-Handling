@@ -1,38 +1,55 @@
+FILENAME = "expenses.txt"
+
+
 def add_expense(name, amount):
-    with open("expenses.txt", "a") as file:
-        file.write(f"{name},{amount}\n")
+    with open(FILENAME, "a", encoding="utf-8") as file:
+        file.write(f"{name},{amount:.2f}\n")
 
 
 def show_expenses():
-    print("\n💰 Your Expenses")
+    print("\n------------------------------")
+    print("       YOUR EXPENSES")
+    print("------------------------------")
 
     try:
-        with open("expenses.txt", "r") as file:
+        with open(FILENAME, "r", encoding="utf-8") as file:
             expenses = file.readlines()
 
-            if not expenses:
-                print("No expenses recorded.")
-                return
+        if not expenses:
+            print("No expenses recorded.")
+            return
 
-            total = 0
+        total = 0.0
 
-            for expense in expenses:
-                name, amount = expense.strip().split(",")
-                amount = float(amount)
-
-                print(f"• {name}: ₹{amount}")
+        for line in expenses:
+            if "," in line:
+                name, amount_str = line.strip().split(",")
+                amount = float(amount_str)
+                # Neat columns: 18 spaces for name, right-aligned amount
+                print(f"- {name:<18} ₹{amount:>8.2f}")
                 total += amount
 
-            print(f"\nTotal: ₹{total}")
+        print("------------------------------")
+        print(f"  {'Total':<18} ₹{total:>8.2f}")
+        print("------------------------------")
 
     except FileNotFoundError:
         print("No expenses recorded.")
 
 
-print("💰 Simple Expense Tracker")
+# --- Main Program ---
+print("==============================")
+print("    Simple Expense Tracker")
+print("==============================")
 
-expense_name = input("Enter expense name: ")
-expense_amount = float(input("Enter amount: ₹"))
+name = input("Enter expense name: ").strip()
 
-add_expense(expense_name, expense_amount)
-show_expenses()
+try:
+    amount = float(input("Enter amount: ₹"))
+    if name and amount > 0:
+        add_expense(name, amount)
+        show_expenses()
+    else:
+        print("Please enter a valid name and an amount greater than 0.")
+except ValueError:
+    print("Invalid amount! Please enter numbers only.")
