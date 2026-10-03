@@ -1,86 +1,98 @@
 FILENAME = "students.txt"
 
 
-def add_student():
-    name = input("Enter student name: ")
-    marks = input("Enter marks: ")
+def read_all_students():
+    """Helper to read records safely and avoid repetitive file-handling."""
+    try:
+        with open(FILENAME, "r", encoding="utf-8") as file:
+            records = []
+            for line in file:
+                line = line.strip()
+                if "," in line:
+                    name, marks = line.split(",", 1)
+                    records.append((name.strip(), marks.strip()))
+            return records
+    except FileNotFoundError:
+        return []
 
-    with open(FILENAME, "a") as file:
+
+def add_student():
+    name = input("Enter student name: ").strip()
+    if not name or "," in name:
+        print("Error: Name cannot be empty or contain commas.")
+        return
+
+    marks = input("Enter marks (0-100): ").strip()
+    if not marks.isdigit() or not (0 <= int(marks) <= 100):
+        print("Error: Please enter a valid whole number between 0 and 100.")
+        return
+
+    with open(FILENAME, "a", encoding="utf-8") as file:
         file.write(f"{name},{marks}\n")
 
-    print("Student record added!")
+    print(f"Record for '{name}' added successfully!")
 
 
 def show_students():
-    try:
-        with open(FILENAME, "r") as file:
-            students = file.readlines()
+    students = read_all_students()
 
-        if not students:
-            print("No student records found.")
-            return
-
-        print("\nSTUDENT RECORDS")
-        print("-" * 35)
-
-        for index, student in enumerate(students, start=1):
-            name, marks = student.strip().split(",")
-            print(f"{index}. {name} - Marks: {marks}")
-
-    except FileNotFoundError:
+    if not students:
         print("No student records found.")
+        return
+
+    print("\n" + "=" * 35)
+    print(f"{'#':<4} {'Name':<20} {'Marks':>8}")
+    print("-" * 35)
+    for index, (name, marks) in enumerate(students, start=1):
+        print(f"{index:<4} {name:<20} {marks:>8}")
+    print("=" * 35)
 
 
 def search_student():
-    search_name = input("Enter student name: ").lower()
+    query = input("Enter student name to search: ").strip().lower()
+    if not query:
+        print("Search term cannot be blank.")
+        return
 
-    try:
-        with open(FILENAME, "r") as file:
-            students = file.readlines()
-
-        found = False
-
-        for student in students:
-            name, marks = student.strip().split(",")
-
-            if search_name in name.lower():
-                print(f"Found: {name} - Marks: {marks}")
-                found = True
-
-        if not found:
-            print("Student not found.")
-
-    except FileNotFoundError:
+    students = read_all_students()
+    if not students:
         print("No student records found.")
+        return
+
+    matches = [(name, marks) for name, marks in students if query in name.lower()]
+
+    if matches:
+        print(f"\nFound {len(matches)} match(es):")
+        for name, marks in matches:
+            print(f"- {name:<20} : {marks} marks")
+    else:
+        print("No matching student found.")
 
 
 def main():
     while True:
         print("\nSTUDENT RECORD MANAGER")
-        print("=" * 35)
+        print("=" * 30)
         print("1. Add Student")
         print("2. Show All Students")
         print("3. Search Student")
         print("4. Exit")
-        print("=" * 35)
+        print("=" * 30)
 
-        choice = input("Enter your choice: ")
+        choice = input("Enter your choice (1-4): ").strip()
 
         if choice == "1":
             add_student()
-
         elif choice == "2":
             show_students()
-
         elif choice == "3":
             search_student()
-
         elif choice == "4":
             print("Program closed.")
             break
-
         else:
-            print("Invalid choice. Try again.")
+            print("Invalid choice. Please enter 1, 2, 3, or 4.")
 
 
-main()
+if __name__ == "__main__":
+    main()
