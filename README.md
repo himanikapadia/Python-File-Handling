@@ -4,7 +4,7 @@ A step-by-step log of my journey learning Python File Handling by building pract
 
 ---
 
-##  Topics Covered
+##  Topics Covered in this repo
 
 ###  File Handling Fundamentals
 - Opening files using `open()`
