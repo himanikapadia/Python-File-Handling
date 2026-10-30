@@ -26,7 +26,7 @@ A step-by-step log of my journey learning Python File Handling by building pract
 
 ---
 
-# 📈 Concept 1: File Handling Fundamentals
+# 📈 Concept 1: File Handling Fundamental
 
 ### 📖 Concepts Learned
 
